@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "ankit@gmail.com",
+      "password": "123456",
+      "name": "Ankit",
+      "role": "admin"
+    },
+    {
+      "name": "Emp 1",
+      "email": "emp1@gmail.com",
+      "password": "123456",
+      "id": "2",
+      "role": "employee",
+      "salary": "3000000"
+    },
+    {
+      "id": "I_97R4nyUX0",
+      "name": "Ankit Yadav",
+      "email": "ay1222926@gmail.com",
+      "password": "123",
+      "role": "employee",
+      "salary": "1500000"
+    },
+    {
+      "name": "Emp2",
+      "email": "eeee@gmail.com",
+      "password": "dde",
+      "id": "nvdX9J8Kugk",
+      "role": "employee",
+      "salary": "1200000"
+    }
+  ],
+  "attendance":[],
+  "$schema": "./node_modules/json-server/schema.json"
+}
