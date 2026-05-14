@@ -1,23 +1,9 @@
-import React from "react";
-
 const AttendanceModal = ({ employee, month, onClose, handleChangeAttendance }) => {
+    console.log(employee)
     const days = Array.from({ length: 30 }, (_, i) => i + 1);
 
     const getStatus = (day) => {
-        return employee.attendance?.[day] || "-";
-    };
-
-    const getColor = (status) => {
-        switch (status) {
-            case "P":
-                return "bg-green-500 text-white";
-            case "A":
-                return "bg-red-500 text-white";
-            case "L":
-                return "bg-yellow-400 text-black";
-            default:
-                return "bg-gray-200";
-        }
+        return employee.attendanceRecords?.[day] || "-";
     };
 
     return (
@@ -47,7 +33,7 @@ const AttendanceModal = ({ employee, month, onClose, handleChangeAttendance }) =
                 {/* Calendar Grid */}
                 <div className="grid grid-cols-7 gap-2">
                     {days.map((day) => {
-                        const status = getStatus(day);
+                        const status = getStatus(day)
 
                         return (
                             <div

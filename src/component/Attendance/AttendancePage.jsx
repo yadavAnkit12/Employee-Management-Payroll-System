@@ -9,30 +9,28 @@ const AttendancePage = () => {
 
     const attendanceList = useSelector((state) => state.attendance.attendanceList);
 
-    const [month, setMonth] = useState("2026-05");
-    const [employees, setEmployees] = useState([]);
+    const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
     const [selectedEmployee, setSelectedEmployee] = useState(null);
 
 
     useEffect(() => {
         dispatch(getAttendanceByMonth(month));
     }, [month]);
+    useEffect(() => {
+        if (selectedEmployee && attendanceList.length > 0) {
+            const updatedEmployee =
+                attendanceList[0].records.find(
+                    (emp) => emp.id === selectedEmployee.id
+                );
 
-    const handleChangeAttendance = (
-        employeeId,
-        day,
-        status
-    ) => {
-        console.log('click')
-        dispatch(
-            updateAttendance(
-                attendanceList[0].id,
-                employeeId,
-                day,
-                status,
-                month
-            )
-        );
+            if (updatedEmployee) {
+                setSelectedEmployee(updatedEmployee);
+            }
+        }
+    }, [attendanceList]);
+
+    const handleChangeAttendance = (employeeId, day, status) => {
+        dispatch(updateAttendance(attendanceList[0].id, employeeId, day, status, month));
     };
 
     console.log(attendanceList)
@@ -58,36 +56,6 @@ const AttendancePage = () => {
                         onChange={(e) => setMonth(e.target.value)}
                         className="border rounded-xl px-4 py-2 shadow-sm"
                     />
-                </div>
-
-                {/* Stats */}
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-blue-50 p-5 rounded-2xl">
-                        <p className="text-sm text-gray-500">
-                            Total Employees
-                        </p>
-                        <h2 className="text-3xl font-bold text-blue-600">
-                            {/* {employees.length || ''} */}
-                        </h2>
-                    </div>
-
-                    <div className="bg-green-50 p-5 rounded-2xl">
-                        <p className="text-sm text-gray-500">
-                            Total Present
-                        </p>
-                        <h2 className="text-3xl font-bold text-green-600">
-                            {/* {totalPresent} */}
-                        </h2>
-                    </div>
-
-                    <div className="bg-red-50 p-5 rounded-2xl">
-                        <p className="text-sm text-gray-500">
-                            Total Absent
-                        </p>
-                        <h2 className="text-3xl font-bold text-red-600">
-                            {/* {totalAbsent} */}
-                        </h2>
-                    </div>
                 </div>
 
                 {/* Table */}
@@ -129,6 +97,7 @@ const AttendancePage = () => {
             {selectedEmployee && (
                 <AttendanceModal
                     employee={selectedEmployee}
+                    attendanceList={attendanceList}
                     month={month}
                     onClose={() => setSelectedEmployee(null)}
                     handleChangeAttendance={handleChangeAttendance}

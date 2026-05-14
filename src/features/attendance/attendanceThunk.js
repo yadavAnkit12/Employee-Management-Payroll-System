@@ -32,7 +32,6 @@ export const getAttendanceByMonth = (month) => {
             const isCurrentMonth = month === currentMonth;
             const isFirstRun =
                 allAttendance.data.length === 0;
-            console.log(isCurrentMonth,isFirstRun)
             // CASE 2 + CASE 3
             if (isCurrentMonth || isFirstRun) {
                 const newAttendance = employees.map(
@@ -54,17 +53,15 @@ export const getAttendanceByMonth = (month) => {
                     "http://localhost:3001/attendance",
                     createdAttendance
                 );
-
-                dispatch(
-                    getAttendance(response.data)
-                );
+                console.log('chllllllll')
+                dispatch(getAttendance(response.data));
 
                 return;
             }
 
             // CASE 4
             alert(
-                "Attendance data not found for selected historical month."
+                "Attendance data not found for selected month."
             );
         } catch (error) {
             console.error(error);
