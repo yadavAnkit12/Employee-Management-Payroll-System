@@ -71,7 +71,7 @@ const Login = () => {
                     />
 
                     <button
-                        type="submit"
+                        type="button"
                         className="w-full bg-white text-purple-700 py-3 rounded-xl"
                     >
                         Login

@@ -118,7 +118,7 @@ const AddEmployee = () => {
                 {/* Buttons */}
                 <div className="flex gap-4 pt-4">
                     <button
-                        type="submit"
+                        type="button"
                         className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
                     >
                         Add Employee

@@ -1,50 +1,116 @@
-const AttendanceModal = ({ employee, month, onClose }) => {
-  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+import React from "react";
 
-  const getStatus = (day) => {
-    return employee.attendance?.days?.[day] || "-";
-  };
+const AttendanceModal = ({ employee, month, onClose, handleChangeAttendance }) => {
+    const days = Array.from({ length: 30 }, (_, i) => i + 1);
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white w-[600px] p-5 rounded-lg">
-        <div className="flex justify-between mb-4">
-          <h2 className="text-xl font-bold">
-            {employee.name} - {month}
-          </h2>
-          <button onClick={onClose} className="text-red-500 font-bold">
-            X
-          </button>
-        </div>
+    const getStatus = (day) => {
+        return employee.attendance?.[day] || "-";
+    };
 
-        {/* Calendar */}
-        <div className="grid grid-cols-7 gap-2 text-center">
-          {days.map((day) => (
-            <div
-              key={day}
-              className={`p-2 border rounded ${
-                getStatus(day) === "P"
-                  ? "bg-green-200"
-                  : getStatus(day) === "A"
-                  ? "bg-red-200"
-                  : getStatus(day) === "L"
-                  ? "bg-yellow-200"
-                  : ""
-              }`}
-            >
-              <div className="text-xs">{day}</div>
-              <div className="font-bold">{getStatus(day)}</div>
+    const getColor = (status) => {
+        switch (status) {
+            case "P":
+                return "bg-green-500 text-white";
+            case "A":
+                return "bg-red-500 text-white";
+            case "L":
+                return "bg-yellow-400 text-black";
+            default:
+                return "bg-gray-200";
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+            <div className="bg-white w-[90%] max-w-4xl rounded-2xl p-6 shadow-xl">
+
+                {/* Header */}
+                <div className="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 className="text-xl font-bold">
+                            {employee.name}
+                        </h2>
+                        <p className="text-gray-500">
+                            Month: {month}
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={onClose}
+                        className="text-red-500 font-bold"
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7 gap-2">
+                    {days.map((day) => {
+                        const status = getStatus(day);
+
+                        return (
+                            <div
+                                key={day}
+                                className="p-3 rounded-lg bg-gray-100"
+                            >
+                                <div className="text-xs text-center mb-2">
+                                    Day {day}
+                                </div>
+
+                                <div className="flex gap-1 justify-center">
+                                    <button
+                                        onClick={() =>
+                                            handleChangeAttendance(employee.id, day, "P")
+                                        }
+                                        className="bg-green-500 text-white px-2 rounded"
+                                    >
+                                        P
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            handleChangeAttendance(employee.id, day, "A")
+                                        }
+                                        className="bg-red-500 text-white px-2 rounded"
+                                    >
+                                        A
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            handleChangeAttendance(employee.id, day, "L")
+                                        }
+                                        className="bg-yellow-400 px-2 rounded"
+                                    >
+                                        L
+                                    </button>
+                                </div>
+
+                                <div className="text-center mt-2 font-bold">
+                                    {status}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Legend */}
+                <div className="flex gap-4 mt-5 text-sm">
+                    <span className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-green-500"></div> Present
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-red-500"></div> Absent
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-yellow-400"></div> Leave
+                    </span>
+                </div>
+
             </div>
-          ))}
         </div>
-
-        {/* Legend */}
-        <div className="flex gap-4 mt-4 text-sm">
-          <span>🟢 P = Present</span>
-          <span>🔴 A = Absent</span>
-          <span>🟡 L = Leave</span>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
+
+export default AttendanceModal;
