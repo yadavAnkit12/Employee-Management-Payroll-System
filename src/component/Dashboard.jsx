@@ -3,6 +3,7 @@ import SideBar from "./SideBar";
 import AddEmployee from "./Employee/AddEmployee";
 import ViewEmployee from "./Employee/ViewEmployee";
 import AttendancePage from "./Attendance/AttendancePage";
+import CalculateSalary from "./Salary/CalculateSalary";
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('')
@@ -21,6 +22,10 @@ const Dashboard = () => {
 
             case "Attendance":
                 setActiveComponent(<AttendancePage />);
+                break;
+
+            case "Calculate Salary":
+                setActiveComponent(<CalculateSalary />);
                 break;
 
             default:

@@ -29,7 +29,7 @@ const SideBar = ({ handleActiveTab }) => {
         {
             title: "Payroll",
             icon: <Wallet size={20} />,
-            submenu: ["Calculate Salary", "View Payroll"],
+            submenu: ["Calculate Salary"],
             isShow: role === "admin",
         },
     ];

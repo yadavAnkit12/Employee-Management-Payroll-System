@@ -39,6 +39,7 @@ export const getAttendanceByMonth = (month) => {
                         // change here if you want more employee records
                         id: emp.id,
                         name: emp.name,
+                        salary:emp.salary,
                         attendanceRecords: {},
                     })
                 );
@@ -53,7 +54,6 @@ export const getAttendanceByMonth = (month) => {
                     "http://localhost:3001/attendance",
                     createdAttendance
                 );
-                console.log('chllllllll')
                 dispatch(getAttendance(response.data));
 
                 return;
@@ -111,6 +111,117 @@ export const updateAttendance = (
         } catch (error) {
             console.error(error);
             alert("Failed to update attendance");
+        }
+    };
+};
+export const calculateSalary = (month) => {
+    return async () => {
+        try {
+            const response = await axios.get(
+                `http://localhost:3001/attendance?month=${month}`
+            );
+
+            if (!response.data.length) {
+                alert("Data not found");
+                return [];
+            }
+
+            const attendanceData = response.data[0];
+
+            if (attendanceData.isPayrollLock) {
+                alert(
+                    "Payroll already generated for this month"
+                );
+                return [];
+            }
+
+            const totalDays = 30;
+
+            const payroll = attendanceData.records.map(
+                (emp) => {
+                    const records =
+                        emp.attendanceRecords || {};
+
+                    let present = 0;
+                    let absent = 0;
+                    let leave = 0;
+
+                    Object.values(records).forEach(
+                        (status) => {
+                            if (status === "P") present++;
+                            else if (status === "A")
+                                absent++;
+                            else if (status === "L")
+                                leave++;
+                        }
+                    );
+
+                    const annualSalary =
+                        Number(emp.salary);
+
+                    const monthlySalary =
+                        annualSalary / 12;
+
+                    const perDaySalary =
+                        monthlySalary / totalDays;
+
+                    const payableDays =
+                        present + leave;
+
+                    const finalSalary =
+                        payableDays * perDaySalary;
+
+                    return {
+                        name: emp.name,
+                        annualSalary,
+                        monthlySalary:
+                            monthlySalary.toFixed(2),
+                        totalPresent: present,
+                        totalAbsent: absent,
+                        totalLeave: leave,
+                        payableSalary:
+                            finalSalary.toFixed(2),
+                    };
+                }
+            );
+            return payroll;
+        } catch (error) {
+            console.error(error);
+            alert("Salary calculation failed");
+        }
+    };
+};
+
+export const runPayroll = (month) => {
+    return async () => {
+        try {
+            const response = await axios.get(
+                `http://localhost:3001/attendance?month=${month}`
+            );
+
+            if (!response.data.length) {
+                alert("Attendance data not found");
+                return;
+            }
+
+            const attendanceData = response.data[0];
+
+            if (attendanceData.isPayrollLock) {
+                alert("Payroll already locked");
+                return;
+            }
+
+            await axios.patch(
+                `http://localhost:3001/attendance/${attendanceData.id}`,
+                {
+                    isPayrollLock: true,
+                }
+            );
+
+            alert("Payroll run successfully");
+        } catch (error) {
+            console.error(error);
+            alert("Failed to run payroll");
         }
     };
 };
